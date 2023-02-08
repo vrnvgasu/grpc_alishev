@@ -1,0 +1,5 @@
+GRPC_Client/target
+GRPC_Client/.idea
+GRPC_Server/target
+GRPC_Server/.idea
+.idea/
