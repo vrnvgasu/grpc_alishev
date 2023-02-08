@@ -2,6 +2,7 @@ package ru.edu;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import java.util.Iterator;
 import ru.edu.grpc.GreetingServiceGrpc;
 import ru.edu.grpc.GreetingServiceOuterClass;
 
@@ -21,9 +22,16 @@ public class Client {
         GreetingServiceOuterClass.HelloRequest.newBuilder()
             .setName("Name")
             .build();
+
     // пока сервер возвращает только один ответ
-    GreetingServiceOuterClass.HelloResponse response = stub.greeting(request);
-    System.out.println(response);
+//    GreetingServiceOuterClass.HelloResponse response = stub.greeting(request);
+//    System.out.println(response);
+
+    // принимаем поток данных 
+    Iterator<GreetingServiceOuterClass.HelloResponse> responseIterator = stub.greeting(request);
+    while (responseIterator.hasNext()) {
+      System.out.println(responseIterator.next());
+    }
 
     channel.shutdown();
   }

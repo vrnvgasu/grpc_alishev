@@ -13,14 +13,23 @@ public class GreetingServiceImp extends GreetingServiceGrpc.GreetingServiceImplB
   public void greeting(HelloRequest request, StreamObserver<HelloResponse> responseObserver) {
     System.out.println(request);
 
-    // GreetingServiceOuterClass.HelloResponse генерится в target
-    GreetingServiceOuterClass.HelloResponse response = GreetingServiceOuterClass
-        .HelloResponse.newBuilder()
-        .setGreeting("Hello from server, " + request.getName())
-        .build();
+    // отправляем данные в потоке
+    for (int i = 0; i < 1000; i++) {
+      try {
+        Thread.sleep(100);
 
-    // пока отсылаем один ответ. Но можем передавать поток данных
-    responseObserver.onNext(response);
+        // GreetingServiceOuterClass.HelloResponse генерится в target
+        GreetingServiceOuterClass.HelloResponse response = GreetingServiceOuterClass
+            .HelloResponse.newBuilder()
+            .setGreeting("Hello from server, " + request.getName())
+            .build();
+
+        // пока отсылаем один ответ. Но можем передавать поток данных
+        responseObserver.onNext(response);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
 
     responseObserver.onCompleted();
   }
